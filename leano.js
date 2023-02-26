@@ -1,3 +1,5 @@
+// TODO: Deno.errors.NotFound
+
 function Event(type) {
     this.type = type;
 }
@@ -77,8 +79,11 @@ globalThis.Deno = {
     args: scriptArgs.slice(1),
     exit: (status) => std.exit(status ?? 0),
     mkdir: (path) => {
-        // TODO: Support options, namely { recursive: true }
-        os.mkdir(path);
+        // TODO: Does not handle non-recursive
+        const parts = path.split("/");
+        for (let i = 0; i < parts.length; i++) {
+            os.mkdir(parts.slice(0, i + 1).join("/"));
+        }
         return Promise.resolve();
     },
     readDir: (path) => {
@@ -128,7 +133,7 @@ globalThis.Deno = {
         if (str) {
             return Promise.resolve(str);
         } else {
-            return Promise.reject(new Error(`Failed to file: ${path}`));
+            return Promise.reject(new Error(`Failed to read text file: ${path}`));
         }
     },
     remove: (path) => {
@@ -137,7 +142,7 @@ globalThis.Deno = {
     writeFile: (path, data) => {
         const file = std.open(path, "wb");
         if (!file) {
-            return Promise.reject(new Error(`Failed to open file for read: ${path}`));
+            return Promise.reject(new Error(`Failed to open file for write: ${path}`));
         }
 
         file.write(data.buffer, 0, data.buffer.byteLength);
@@ -146,7 +151,7 @@ globalThis.Deno = {
     writeTextFile: (path, text) => {
         const file = std.open(path, "w");
         if (!file) {
-            return Promise.reject(new Error(`Failed to open file for write: ${path}`));
+            return Promise.reject(new Error(`Failed to open text file for write: ${path}`));
         }
 
         file.puts(text);
