@@ -21,8 +21,24 @@ EventTarget.prototype.removeEventListener = function (type, listener) {
 
 globalThis.EventTarget = EventTarget;
 
-function DateTimeFormat() {
-    this.format = (date) => date.toISOString();
+const localeToDateFimeFormat = {
+    ["en-US"]: (options) => {
+        if (options.month === "long") {
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            return (date) => `${monthNames[date.getUTCMonth()]} ${date.getUTCDate()}, ${date.getUTCFullYear()}`;
+        }
+
+        throw "TODO";
+    },
+};
+
+function DateTimeFormat(locale, options) {
+    const factory = localeToDateFimeFormat[locale];
+    if (!factory) {
+        throw "TODO";
+    }
+
+    this.format = factory(options);
 }
 
 globalThis.Intl = {
