@@ -10,6 +10,8 @@ As of this writing, Deno doesn't support Raspberry Pi (either 32-bit or 64-bit),
 In order to support other architectures, rather than attempt to port Deno directly (a worthwhile, but far too ambitious goal), this tool simply embeds QuickJS (which is portable) and then provides a (minimal) implementation of Deno's API (along with related web APIs that aren't implemented in QuickJS).
 
 ## Usage
-1. Build QuickJS's `qjs` command line tool
+1. Clone the repository (including submodules)
+1. Run "make"
 1. If needed, use a bundler/transpiler to convert TypeScript code to JavaScript
-1. Run `qjs --std -I leano.js <script>`
+1. Run `leano <script>`
+

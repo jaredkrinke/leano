@@ -1,3 +1,6 @@
+import * as std from "std";
+import * as os from "os";
+
 // TODO: Deno.errors.NotFound
 
 function Event(type) {
@@ -76,7 +79,7 @@ TextEncoder.prototype.encode = function (str) {
 globalThis.TextEncoder = TextEncoder;
 
 globalThis.Deno = {
-    args: scriptArgs.slice(1),
+    args: scriptArgs,
     exit: (status) => std.exit(status ?? 0),
     mkdir: (path) => {
         // TODO: Does not handle non-recursive
