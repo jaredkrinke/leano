@@ -53,13 +53,9 @@ globalThis.Intl = {
 function TextDecoder() {
 }
 
-TextDecoder.prototype.decode = function (bytes) {
-    // TODO: Implement for real
-    let str = "";
-    for (const byte of bytes) {
-        str += String.fromCharCode(byte);
-    }
-    return str;
+TextDecoder.prototype.decode = function (bufferOrTypedArray) {
+	// If a TypedArray was supplied, use the underlying ArrayBuffer
+	return __TextDecoder_decode(bufferOrTypedArray?.buffer ?? bufferOrTypedArray);
 };
 
 globalThis.TextDecoder = TextDecoder;
@@ -68,13 +64,8 @@ function TextEncoder() {
 }
 
 TextEncoder.prototype.encode = function (str) {
-    // TODO: Real implementation
-    const buffer = new Uint8Array(str.length);
-    for (let i = 0; i < str.length; i++) {
-        buffer[i] = str.charCodeAt(i);
-    }
-    return buffer;
-}
+	return new Uint8Array(__TextEncoder_encode(str));
+};
 
 globalThis.TextEncoder = TextEncoder;
 
@@ -148,7 +139,7 @@ globalThis.Deno = {
             return Promise.reject(new Error(`Failed to open file for write: ${path}`));
         }
 
-        file.write(data.buffer, 0, data.buffer.byteLength);
+        file.write(data.buffer, 0, data.byteLength);
         return Promise.resolve();
     },
     writeTextFile: (path, text) => {
