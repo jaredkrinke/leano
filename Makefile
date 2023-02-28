@@ -1,15 +1,14 @@
-# TODO: LTO
 CC=gcc
-CFLAGS=-Wall -Werror -O2
+CFLAGS=-Wall -Werror -O2 -flto
 LIBS=-lm -ldl -lpthread
 
-leano: leano.o quickjs/libquickjs.a
-	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
+leano: leano.o quickjs/libquickjs.lto.a
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
 leano.o: leano.c lib.h
 
-quickjs/libquickjs.a: quickjs
-	make -C quickjs libquickjs.a
+quickjs/libquickjs.lto.a: quickjs
+	make -C quickjs libquickjs.lto.a
 
 lib.h: stringify.sed leano.js
 	cat leano.js |sed -f stringify.sed > lib.h
