@@ -59,7 +59,7 @@ static JSValue text_encoder_encode(JSContext *context, JSValueConst this_value, 
 
 	// Ownership of string moved to array buffer...
 	arrayBuffer = JS_NewArrayBuffer(context, (uint8_t*)string, length, free_array_buffer_string, context, FALSE);
-	if (!arrayBuffer) {
+	if (JS_IsException(arrayBuffer)) {
 		JS_FreeCString(context, string);
 		return JS_EXCEPTION;
 	}
@@ -83,7 +83,7 @@ static JSValue text_decoder_decode(JSContext *context, JSValueConst this_value, 
 
 	string = JS_NewStringLen(context, (const char*)buffer, length);
 	// TODO: Need to free?
-	if (!string) {
+	if (JS_IsException(string)) {
 		return JS_EXCEPTION;
 	}
 
